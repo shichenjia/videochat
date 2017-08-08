@@ -1,9 +1,9 @@
 # videochat
 一个简单的聊天室:利用了vue+vue-router+vue-resource+mongoose+node+socket.io+element-ui+md5+formidable
 
-注册那一块加入了数据库的一些操作;
+注册那一块加入了数据库的一些操作;通过后台验证才能进行下一步操作;
 
-formidable主要用来操作表单提交的数据;
+新增了聊天记录加入数据库，并且能够显示最新的5条历史记录;
 
 npm install
 
