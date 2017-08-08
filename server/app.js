@@ -4,6 +4,7 @@ const io=require('socket.io')(server);
 const formidable = require('formidable');
 const User=require('./User');
 const md5=require('md5');
+const Chat=require('./Chat');
 
 app.post('/register',function (req,res) {
   res.header({
@@ -57,8 +58,30 @@ app.post('/login',function (req,res) {
     });
   });
 });
+
+app.get('/message',function (req,res) {
+  res.header({
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers":"X-Requested-With",
+    "Access-Control-Allow-Methods":"PUT,POST,GET,DELETE,OPTIONS",
+    "X-Powered-By":' 3.2.1',
+    "Content-Type":"application/json;charset=utf-8"
+  });
+  Chat.find({}).skip(0).limit(5).sort({'time':-1}).exec(function (err,result) {
+    if(err){
+      res.json({result:{number:-1}})
+      return;
+    }
+    if(result.length==0){
+      res.json({result:{number:-2}});
+      return;
+    }
+     res.json({result:{number:0,result}});
+  })
+});
 io.on('connection', function (socket) {
    socket.on('message',function (data) {
+     Chat.create({'username':data.username,'message':data.msg,'time':new Date()});
      io.emit('message',data)
    });
    socket.on('login',function (data) {
