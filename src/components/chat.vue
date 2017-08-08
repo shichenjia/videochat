@@ -47,7 +47,7 @@
       socket.on('login',(data) =>{
         this.$message('欢迎'+data.user+'加入聊天室')
       });
-      socket.on('message', function (data) {
+      socket.on('message', (data)=> {
         let col = document.createElement('div');
         col.className = 'el-col el-col-24 message';
         col.innerHTML='<div class="el-card">'+
