@@ -1,4 +1,3 @@
-<script src="../../static/jquery.mCustomScrollbar.concat.min.js"></script>
 <template>
   <div class="chat">
     <el-row class="top">
