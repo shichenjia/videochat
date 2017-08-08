@@ -3,7 +3,11 @@
     <el-row class="top">
       <el-col>聊天室</el-col>
     </el-row>
-    <el-row class="content"></el-row>
+    <el-row class="content">
+      <el-col v-show="show" :span='12' :offset="10">
+        <el-button @click="gethistorymessage">获取历史记录</el-button>
+      </el-col>
+    </el-row>
     <el-row class="fixed">
       <el-col :span="22">
         <el-input v-model="sendinput"></el-input>
@@ -20,7 +24,8 @@
     data() {
       return {
         sendinput: '',
-        disable: false
+        disable: false,
+        show:true
       }
     },
     methods: {
@@ -37,6 +42,35 @@
         let socket = io('http://127.0.0.1:3000');
         let username=this.$route.query.username;
         socket.emit('message', {msg:this.sendinput,username:username});
+      },
+      gethistorymessage(){
+        this.show = !this.show
+        this.$http.get('http://127.0.0.1:3000/message',{emulateJSON:true}).then(res=>{
+            switch (res.body.result.number){
+              case -1:
+                this.$message.error('服务器错误!');
+                break;
+              case -2:
+                this.$message('历史记录为空！');
+                break;
+              default:
+                for(let i in res.body.result.result){
+                  let col = document.createElement('div');
+                  col.className = 'el-col el-col-24 message';
+                  col.innerHTML='<div class="el-card">'+
+                    '<div class="el-card__body">'+
+                    '<div class="item">'+
+                    '<p>'+res.body.result.result[i].time+'</p>'+
+                    '<p>'+res.body.result.result[i].username+'说:'+res.body.result.result[i].message+'</p>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>';
+                  document.getElementsByClassName('content')[0].appendChild(col);
+                }
+            }
+        },err=>{
+          console.log(err)
+        })
       }
     },
     created(){
@@ -59,7 +93,7 @@
           '</div>';
         document.getElementsByClassName('content')[0].appendChild(col);
         document.getElementsByClassName('content')[0].scrollTop=document.getElementsByClassName('content')[0].scrollHeight;
-      })
+      });
     },
     mounted(){
       let wh=document.documentElement.clientHeight || document.body.clientHeight;
@@ -93,6 +127,9 @@
     bottom: 0;
     left: 0;
     width: 100%;
+  }
+  #getmessage{
+    margin:0 auto;
   }
 .message{
   margin-bottom: 10px;
