@@ -10,7 +10,7 @@
              <el-input v-model="username"></el-input>
            </el-form-item>
            <el-form-item label="密码">
-             <el-input v-model="pwd"></el-input>
+             <el-input v-model="pwd" type="password"></el-input>
            </el-form-item>
            <el-col :offset="12">
              <el-button type="primary" size="large" @click="login">登录</el-button>
